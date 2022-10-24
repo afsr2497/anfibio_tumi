@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>PruebaGamepad</title>
+    </head>
+    <body>
+        <h5 id="gpInfo">PruebaGamepad</h5>
+        <h5 id="button"></h5>
+        <h5 id="informacion"></h5>
+        <script>
+            var i = 1; 
+            window.addEventListener("gamepadconnected", function(e) {
+            var gp = navigator.getGamepads()[e.gamepad.index];
+            document.getElementById("gpInfo").innerHTML = ("A " + gp.id + " was successfully detected! There are a total of " + gp.buttons.length + " buttons.")
+            //alert("A " + gp.id + " was successfully detected!")
+
+            setInterval(function(){
+                gp = navigator.getGamepads()[e.gamepad.index];
+                isPressed = gp.buttons[0].pressed;
+                if(isPressed === true)
+                {
+                    fetch('http://192.168.137.30:8666/infoRobot')
+                    .then(response => response.json())
+                    .then(data => {
+                        let elementoInfo = document.getElementById('informacion')
+                        elementoInfo.innerHTML = ''
+                        elementoInfo.innerHTML = data.direccion
+                    })
+                }
+                else
+                {
+                    let elementoInfo = document.getElementById('informacion')
+                    elementoInfo.innerHTML = ''
+                }
+                
+                document.getElementById("button").innerHTML = isPressed;
+            }, 100)
+            });
+        </script>
+    </body>
+</html>
